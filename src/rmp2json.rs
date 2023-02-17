@@ -2,6 +2,20 @@ use rmp::decode::{*, bytes::Bytes};
 use serde_json::{Value, Number, Map};
 
 
+pub trait FromRmp {
+  type Ret;
+  #[allow(clippy::result_unit_err)]
+  fn from_rmp(rd: &[u8]) -> Result<Self::Ret, ()>;
+}
+
+impl FromRmp for Value {
+  type Ret = Self;
+  fn from_rmp(rd: &[u8]) -> Result<Self::Ret, ()> {
+    from_rmp(rd)
+  }
+}
+
+
 #[allow(clippy::result_unit_err)]
 pub fn from_rmp(rd: &[u8]) -> Result<Value, ()> {
   let mut rd = Bytes::new(rd);

@@ -3,6 +3,19 @@ use serde_json::Value::*;
 use rmp::encode::{*, buffer::ByteBuf};
 
 
+
+pub trait ToRmp {
+  #[allow(clippy::result_unit_err)]
+  fn to_rmp(&self) -> Result<Vec<u8>, ()>;
+}
+
+impl ToRmp for Value {
+  fn to_rmp(&self) -> Result<Vec<u8>, ()> {
+    to_rmp(self)
+  }
+}
+
+
 #[allow(clippy::result_unit_err)]
 pub fn to_rmp(this: &Value) -> Result<Vec<u8>, ()> {
   let mut buf = ByteBuf::new();
