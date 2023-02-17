@@ -1,7 +1,6 @@
 pub mod rmp2json;
 pub mod json2rmp;
 
-pub struct Value(pub serde_json::Value);
 
 /*
 use serde::{Serializer, Deserializer, Serialize, Deserialize};
