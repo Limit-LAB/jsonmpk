@@ -33,7 +33,7 @@ fn utils_read_str(rd: &mut Bytes) -> Result<String, ()> {
   Err(())
 }
 
-
+#[allow(clippy::result_unit_err)]
 pub fn read_value(rd: &mut Bytes) -> Result<Value, ()> {
   let m = read_marker(rd).map_err(|_e| ())?;
   let r = match m {
