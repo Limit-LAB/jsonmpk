@@ -35,8 +35,10 @@ fn utils_read_str(rd: &mut Bytes) -> Result<String, ()> {
   Err(())
 }
 
-fn err_handle<T: Debug>(e: T) -> () {
-  println!("error: {:?}", e);
+fn err_handle<T: Debug>(e: T) {
+  if cfg!(test) || cfg!(debug_assertions) {
+    println!("error: {e:?}");
+  }
 }
 
 #[allow(clippy::result_unit_err)]
