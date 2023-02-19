@@ -1,18 +1,19 @@
+unstable_features = true
 
-tab_spaces = 2
-blank_lines_upper_bound = 3
-enum_discrim_align_threshold = 20
-struct_field_align_threshold = 20
+version = "Two"
 
-newline_style = "Unix"
-binop_separator = "Back"
-brace_style = "PreferSameLine"
-# match_arm_leading_pipes = "Always"
-imports_layout = "HorizontalVertical"
+group_imports = "StdExternalCrate"
+imports_granularity = "Crate"
+reorder_imports = true
 
-fn_single_line = true
+wrap_comments = true
+normalize_comments = true
+
 reorder_impl_items = true
-remove_nested_parens = true
-overflow_delimited_expr = true
+condense_wildcard_suffixes = true
+enum_discrim_align_threshold = 20
 use_field_init_shorthand = true
+
+format_strings = true
 format_code_in_doc_comments = true
+format_macro_matchers = true
