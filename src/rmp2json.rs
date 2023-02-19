@@ -1,8 +1,8 @@
 use std::fmt::Debug;
 
-use rmp::decode::{*, bytes::Bytes};
+use rmp::decode::{bytes::Bytes, *};
 use rmp::Marker::*;
-use serde_json::{Value, Number, Map};
+use serde_json::{Map, Number, Value};
 
 
 pub trait FromRmp {
@@ -13,9 +13,8 @@ pub trait FromRmp {
 
 impl FromRmp for Value {
   type Ret = Self;
-  fn from_rmp(rd: &[u8]) -> Result<Self::Ret, ()> {
-    from_rmp(rd)
-  }
+
+  fn from_rmp(rd: &[u8]) -> Result<Self::Ret, ()> { from_rmp(rd) }
 }
 
 
@@ -47,14 +46,14 @@ pub fn read_value(rd: &mut Bytes) -> Result<Value, ()> {
   let r = match m {
     FixPos(val) => Value::Number(Number::from(val)),
     FixNeg(val) => Value::Number(Number::from(val)),
-    Null  => Value::Null,
-    True  => Value::Bool(true),
+    Null => Value::Null,
+    True => Value::Bool(true),
     False => Value::Bool(false),
-    U8  => Value::Number(Number::from(rd.read_data_u8().map_err(err_handle)?)),
+    U8 => Value::Number(Number::from(rd.read_data_u8().map_err(err_handle)?)),
     U16 => Value::Number(Number::from(rd.read_data_u16().map_err(err_handle)?)),
     U32 => Value::Number(Number::from(rd.read_data_u32().map_err(err_handle)?)),
     U64 => Value::Number(Number::from(rd.read_data_u64().map_err(err_handle)?)),
-    I8  => Value::Number(Number::from(rd.read_data_i8().map_err(err_handle)?)),
+    I8 => Value::Number(Number::from(rd.read_data_i8().map_err(err_handle)?)),
     I16 => Value::Number(Number::from(rd.read_data_i16().map_err(err_handle)?)),
     I32 => Value::Number(Number::from(rd.read_data_i32().map_err(err_handle)?)),
     I64 => Value::Number(Number::from(rd.read_data_i64().map_err(err_handle)?)),
@@ -62,64 +61,78 @@ pub fn read_value(rd: &mut Bytes) -> Result<Value, ()> {
     F64 => Value::Number(Number::from_f64(rd.read_data_f64().map_err(err_handle)?).unwrap()),
     FixStr(size) => {
       let size = size as usize;
-      let str = (0..size).map(|_| rd.read_u8().unwrap()).collect::<Vec<u8>>();
+      let str = (0..size)
+        .map(|_| rd.read_u8().unwrap())
+        .collect::<Vec<u8>>();
       Value::String(String::from_utf8(str).unwrap())
-    },
+    }
     Str8 => {
       let size = rd.read_data_u8().unwrap() as usize;
-      let str = (0..size).map(|_| rd.read_u8().unwrap()).collect::<Vec<u8>>();
+      let str = (0..size)
+        .map(|_| rd.read_u8().unwrap())
+        .collect::<Vec<u8>>();
       Value::String(String::from_utf8(str).unwrap())
-    },
+    }
     Str16 => {
       let size = rd.read_data_u16().unwrap() as usize;
-      let str = (0..size).map(|_| rd.read_u8().unwrap()).collect::<Vec<u8>>();
+      let str = (0..size)
+        .map(|_| rd.read_u8().unwrap())
+        .collect::<Vec<u8>>();
       Value::String(String::from_utf8(str).unwrap())
-    },
+    }
     Str32 => {
       let size = rd.read_data_u32().unwrap() as usize;
-      let str = (0..size).map(|_| rd.read_u8().unwrap()).collect::<Vec<u8>>();
+      let str = (0..size)
+        .map(|_| rd.read_u8().unwrap())
+        .collect::<Vec<u8>>();
       Value::String(String::from_utf8(str).unwrap())
-    },
+    }
     FixArray(size) => {
       let size = size as usize;
-      let arr = (0..size).map(|_| read_value(rd)).collect::<Result<Vec<_>, _>>();
+      let arr = (0..size)
+        .map(|_| read_value(rd))
+        .collect::<Result<Vec<_>, _>>();
       let arr = arr.map_err(err_handle)?;
       Value::Array(arr)
-    },
+    }
     Array16 => {
       let size = rd.read_data_u16().unwrap() as usize;
-      let arr = (0..size).map(|_| read_value(rd)).collect::<Result<Vec<_>, _>>();
+      let arr = (0..size)
+        .map(|_| read_value(rd))
+        .collect::<Result<Vec<_>, _>>();
       let arr = arr.map_err(err_handle)?;
       Value::Array(arr)
-    },
+    }
     Array32 => {
       let size = rd.read_data_u32().unwrap() as usize;
-      let arr = (0..size).map(|_| read_value(rd)).collect::<Result<Vec<_>, _>>();
+      let arr = (0..size)
+        .map(|_| read_value(rd))
+        .collect::<Result<Vec<_>, _>>();
       let arr = arr.map_err(err_handle)?;
       Value::Array(arr)
-    },
+    }
     FixMap(size) => {
       let size = size as usize;
       let map = (0..size)
         .map(|_| -> Result<(String, Value), ()> { Ok((utils_read_str(rd)?, read_value(rd)?)) })
         .collect::<Result<Map<String, Value>, _>>()?;
       Value::Object(map)
-    },
+    }
     Map16 => {
       let size = rd.read_data_u16().unwrap() as usize;
       let map = (0..size)
         .map(|_| -> Result<(String, Value), ()> { Ok((utils_read_str(rd)?, read_value(rd)?)) })
         .collect::<Result<Map<String, Value>, _>>()?;
       Value::Object(map)
-    },
+    }
     Map32 => {
       let size = rd.read_data_u32().unwrap() as usize;
       let map = (0..size)
         .map(|_| -> Result<(String, Value), ()> { Ok((utils_read_str(rd)?, read_value(rd)?)) })
         .collect::<Result<Map<String, Value>, _>>()?;
       Value::Object(map)
-    },
-    _ => unimplemented!()
+    }
+    _ => unimplemented!(),
   };
   Ok(r)
 }

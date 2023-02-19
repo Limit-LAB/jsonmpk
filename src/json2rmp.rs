@@ -1,6 +1,6 @@
+use rmp::encode::{buffer::ByteBuf, *};
 use serde_json::Value;
 use serde_json::Value::*;
-use rmp::encode::{*, buffer::ByteBuf};
 
 
 
@@ -10,9 +10,7 @@ pub trait ToRmp {
 }
 
 impl ToRmp for Value {
-  fn to_rmp(&self) -> Result<Vec<u8>, ()> {
-    to_rmp(self)
-  }
+  fn to_rmp(&self) -> Result<Vec<u8>, ()> { to_rmp(self) }
 }
 
 
@@ -39,7 +37,7 @@ pub fn write_value<W: RmpWrite>(wr: &mut W, val: &Value) -> Result<(), ()> {
         unreachable!();
       }
       Ok(())
-    },
+    }
     String(v) => write_str(wr, v).map_err(|_e| ()),
     Array(v) => {
       write_array_len(wr, v.len().try_into().unwrap()).map_err(|_e| ())?;
@@ -47,7 +45,7 @@ pub fn write_value<W: RmpWrite>(wr: &mut W, val: &Value) -> Result<(), ()> {
         write_value(wr, i).map_err(|_e| ())?;
       }
       Ok(())
-    },
+    }
     Object(v) => {
       write_map_len(wr, v.len().try_into().unwrap()).map_err(|_e| ())?;
       for (k, v) in v.iter() {
@@ -55,6 +53,6 @@ pub fn write_value<W: RmpWrite>(wr: &mut W, val: &Value) -> Result<(), ()> {
         write_value(wr, v).map_err(|_e| ())?;
       }
       Ok(())
-    },
+    }
   }
 }

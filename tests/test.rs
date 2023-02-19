@@ -1,44 +1,39 @@
+use rmp::Marker;
+use serde::{de::DeserializeOwned, Serialize};
+use serde_derive::{Deserialize, Serialize};
+use serde_json::Value;
 use std::fmt::Debug;
 
-use serde::{Serialize, de::DeserializeOwned};
-use serde_derive::{Serialize, Deserialize};
-use serde_json::Value;
-use rmp::Marker;
 
 use jsonmpk::*;
 
 
 
-#[derive(Debug, Default, PartialEq, Eq)]
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Foo {
-  age: u8,
-  num: i32,
-  name: String,
+  age:    u8,
+  num:    i32,
+  name:   String,
   access: bool,
 }
 
 
-#[derive(Debug, Default, PartialEq, Eq)]
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Bar {
-  age: u8,
-  aba: Vec<u16>,
+  age:   u8,
+  aba:   Vec<u16>,
   abcde: Option<bool>,
 }
 
 
 #[test]
 fn test() {
-  let test_cases = [
-    Foo::default(),
-    Foo {
-        age: 11,
-        num: 114514,
-        name: "1145141919810".to_string(),
-        access: true,
-    }
-  ];
+  let test_cases = [Foo::default(), Foo {
+    age:    11,
+    num:    114514,
+    name:   "1145141919810".to_string(),
+    access: true,
+  }];
   for i in test_cases {
     rmp2json_once(&i);
     json2rmp_once(&i);
