@@ -36,8 +36,23 @@ fn test() {
     json2rmp_once(&i);
   }
 
-  rmp2json_once(&Bar::default());
-  json2rmp_once(&Bar::default());
+  let test_cases = [
+    Bar::default(),
+    Bar {
+      aba:   vec![1, 2, 3, 4, 5],
+      abcde: Some(true),
+      age:   19,
+    },
+    Bar {
+      aba:   vec![1],
+      abcde: Some(false),
+      age:   42,
+    },
+  ];
+  for i in test_cases {
+    rmp2json_once(&i);
+    json2rmp_once(&i);
+  }
 }
 
 fn rmp2json_once<T: Debug + Serialize + DeserializeOwned + PartialEq>(foo: &T) {
