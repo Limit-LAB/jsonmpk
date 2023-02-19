@@ -1,8 +1,9 @@
 pub mod json2rmp;
 pub mod rmp2json;
 
-pub use json2rmp::*;
-pub use rmp2json::*;
+pub use json2rmp::ToRmp;
+pub use rmp2json::FromRmp;
+
 
 /*
 use serde::{Serializer, Deserializer, Serialize, Deserialize};
