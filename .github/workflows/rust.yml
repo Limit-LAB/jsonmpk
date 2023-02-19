@@ -11,11 +11,16 @@ env:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
+    - name: Install latest nightly
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: nightly
+        override: true
+        components: rustfmt, clippy
     - name: Build
       run: cargo build --verbose
     - name: Run tests
@@ -24,4 +29,4 @@ jobs:
       run: cargo fmt --check
     - name: Run clippy
       run: cargo clippy --verbose
-    
+
