@@ -52,7 +52,7 @@ fn json2rmp_once<T: Debug + PartialEq + Serialize + DeserializeOwned>(foo: &T) {
 }
 
 fuzz_target!(|input: Gee| {
-    // fuzzed code goes here
+    // convert test
     rmp2json_once(&input);
     json2rmp_once(&input);
 });
