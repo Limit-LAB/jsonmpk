@@ -65,9 +65,9 @@ fn test() {
         Gee::default(),
         Gee {
             ababa: Bar {
-                aba: vec![1, 2, 3, 4, 5],
-                abcde: Some(true),
-                age: 19,
+                aba: vec![1, 9, 1, 9, 8],
+                abcde: Some(false),
+                age: 10,
             },
             abcde: vec![("lemon".to_string(), 1), ("hx".to_string(), 2)].into_iter().collect(),
         }
