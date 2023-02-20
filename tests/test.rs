@@ -1,4 +1,4 @@
-use std::fmt::Debug;
+use std::{fmt::Debug, collections::HashMap};
 
 use jsonmpk::{FromRmp, ToRmp};
 use rmp::Marker;
@@ -19,6 +19,13 @@ pub struct Bar {
     age: u8,
     aba: Vec<u16>,
     abcde: Option<bool>,
+}
+
+
+#[derive(Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Gee {
+    ababa: Bar,
+    abcde: HashMap<String, i32>,
 }
 
 #[test]
@@ -49,6 +56,21 @@ fn test() {
             abcde: Some(false),
             age: 42,
         },
+    ];
+    for i in test_cases {
+        rmp2json_once(&i);
+        json2rmp_once(&i);
+    }
+    let test_cases = [
+        Gee::default(),
+        Gee {
+            ababa: Bar {
+                aba: vec![1, 2, 3, 4, 5],
+                abcde: Some(true),
+                age: 19,
+            },
+            abcde: vec![("lemon".to_string(), 1), ("hx".to_string(), 2)].into_iter().collect(),
+        }
     ];
     for i in test_cases {
         rmp2json_once(&i);
