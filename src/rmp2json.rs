@@ -38,9 +38,9 @@ fn utils_read_str(rd: &mut Bytes) -> Result<String, ()> {
     }
 }
 
-fn err_handle<T: Debug>(e: T) {
+fn err_handle<T: Debug>(_e: T) {
     if cfg!(test) || cfg!(debug_assertions) {
-        println!("error: {e:?}");
+        // println!("error: {e:?}");
     }
 }
 
